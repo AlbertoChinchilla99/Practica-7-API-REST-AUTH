@@ -5,7 +5,7 @@ const juegosData = require('../data/juegosData')
 const seedJuegos = async () => {
   try {
     await mongoose.connect(
-      'mongodb+srv://<usuario>:<contraseña>@cluster0.kwu3o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+      'mongodb+srv://albertochinchilla1999:2Sb3LkU6VxURG6xD@cluster0.kwu3o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
     )
 
     await Juego.collection.drop()
