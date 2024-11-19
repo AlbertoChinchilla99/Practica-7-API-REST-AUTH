@@ -98,9 +98,7 @@ Para poblar tu base de datos con los datos iniciales de **Juegos** y **Plataform
 
 
 
-## Licencia
 
-Este proyecto se desarrolla con fines educativos y no tiene una licencia específica. Puedes utilizarlo como referencia o base para tus proyectos personales.
 
 
 
