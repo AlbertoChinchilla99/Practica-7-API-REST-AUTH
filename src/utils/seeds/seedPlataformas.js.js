@@ -6,7 +6,7 @@ const Juego = require('../../api/models/juegos')
 const seedPlataformas = async () => {
   try {
     await mongoose.connect(
-      'mongodb+srv://albertochinchilla1999:2Sb3LkU6VxURG6xD@cluster0.kwu3o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+     'mongodb+srv://albertochinchilla1999:2Sb3LkU6VxURG6xD@cluster0.kwu3o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
     )
 
     await Plataforma.collection.drop()
