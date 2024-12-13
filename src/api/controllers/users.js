@@ -66,7 +66,7 @@ const updateUser = async (req, res, next) => {
     const newUser = new User(req.body)
     newUser._id = id
     const userUpdated = await User.findByIdAndUpdate(id, newUser, { new: true })
-    return res.status(200).json(UserUpdated)
+    return res.status(200).json(userUpdated)
   } catch (error) {
     return res.status(400).json('Error en la solicitud')
   }

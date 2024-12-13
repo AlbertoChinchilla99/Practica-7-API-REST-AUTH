@@ -69,13 +69,25 @@ const postJuego = async (req, res, next) => {
 const putJuego = async (req, res, next) => {
   try {
     const { id } = req.params
-    const newJuego = new Juego(req.body)
-    newJuego._id = id
-    const juegoUpdated = await Juego.findByIdAndUpdate(id, newJuego, {
+
+    const juegoExistente = await Juego.findById(id)
+    if (!juegoExistente) {
+      return res.status(404).json('Juego no encontrado')
+    }
+
+    const updatedJuego = { ...req.body }
+
+    if (updatedJuego.verified === undefined) {
+      updatedJuego.verified = juegoExistente.verified
+    }
+
+    const juegoUpdated = await Juego.findByIdAndUpdate(id, updatedJuego, {
       new: true
     })
+
     return res.status(200).json(juegoUpdated)
   } catch (error) {
+    console.error(error)
     return res.status(400).json('Error en la solicitud')
   }
 }

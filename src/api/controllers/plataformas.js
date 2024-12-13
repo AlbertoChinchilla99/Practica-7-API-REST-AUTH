@@ -29,44 +29,53 @@ const postPlataforma = async (req, res, next) => {
   }
 }
 
-const putPlataforma = async (req, res, next) => {
+const putPlataforma = async (req, res) => {
   try {
     const { id } = req.params
     const { juegosToAdd, juegosToRemove } = req.body
 
-    if (!Array.isArray(juegosToAdd) || !Array.isArray(juegosToRemove)) {
-      return res.status(400).json('Los parámetros deben ser arrays')
+    const parseToArray = (input) =>
+      Array.isArray(input) ? input : input ? [input] : []
+
+    const juegosToAddArray = parseToArray(juegosToAdd)
+    const juegosToRemoveArray = parseToArray(juegosToRemove)
+
+    if (
+      !juegosToAddArray.every((j) => typeof j === 'string') ||
+      !juegosToRemoveArray.every((j) => typeof j === 'string')
+    ) {
+      return res
+        .status(400)
+        .json('Los parámetros deben ser strings o arrays de strings')
     }
 
-    if (juegosToAdd && juegosToAdd.length > 0) {
-      const juegosExistentes = await Juego.find({ _id: { $in: juegosToAdd } })
-      if (juegosExistentes.length !== juegosToAdd.length) {
+    if (juegosToAddArray.length > 0) {
+      const juegosExistentes = await Juego.find({
+        _id: { $in: juegosToAddArray }
+      })
+      if (juegosExistentes.length !== juegosToAddArray.length) {
         return res.status(400).json('Algunos juegos no existen')
       }
 
-      const plataformaUpdated = await Plataforma.findByIdAndUpdate(
+      await Plataforma.findByIdAndUpdate(
         id,
-        { $addToSet: { juegos: { $each: juegosToAdd } } },
+        { $addToSet: { juegos: { $each: juegosToAddArray } } },
         { new: true }
       )
-      return res.status(200).json(plataformaUpdated)
     }
 
-    if (juegosToRemove && juegosToRemove.length > 0) {
-      const plataformaUpdated = await Plataforma.findByIdAndUpdate(
+    if (juegosToRemoveArray.length > 0) {
+      await Plataforma.findByIdAndUpdate(
         id,
-        { $pull: { juegos: { $in: juegosToRemove } } }, // $in elimina los juegos especificados
+        { $pull: { juegos: { $in: juegosToRemoveArray } } },
         { new: true }
       )
-      return res.status(200).json(plataformaUpdated)
     }
 
-    return res
-      .status(400)
-      .json('No se especificaron juegos para agregar o eliminar')
+    return res.status(200).json('Actualización exitosa')
   } catch (error) {
     console.error(error)
-    return res.status(400).json('Error en la solicitud')
+    return res.status(500).json('Error en la solicitud')
   }
 }
 

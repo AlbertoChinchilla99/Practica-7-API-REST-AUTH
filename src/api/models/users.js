@@ -3,34 +3,26 @@ const bcrypt = require('bcrypt')
 
 const userSchema = new mongoose.Schema(
   {
-    userName: { type: String, required: true, unique: true },
+    userName: { type: String, required: true },
     password: { type: String, required: true },
     rol: {
       type: String,
       required: true,
       enum: ['admin', 'user'],
       default: 'user'
-    }
+    },
+
+    juegos: [
+      { type: mongoose.Types.ObjectId, ref: 'juegos', required: false } // Asegúrate de que este campo exista
+    ]
   },
   {
     timestamps: true,
     collection: 'users'
   }
 )
-
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next()
-  try {
-    this.password = await bcrypt.hash(this.password, 10)
-    next()
-  } catch (error) {
-    next(error)
-  }
+userSchema.pre('save', function () {
+  this.password = bcrypt.hashSync(this.password, 10)
 })
-
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password)
-}
-
 const User = mongoose.model('users', userSchema, 'users')
 module.exports = User
