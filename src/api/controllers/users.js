@@ -2,6 +2,15 @@ const { generateSign } = require('../../config/jwt')
 const User = require('../models/users')
 const bcrypt = require('bcrypt')
 
+const buscarUsuario = async (userName) => {
+  try {
+    return await User.findOne({ userName })
+  } catch (error) {
+    console.error('Error buscando usuario:', error)
+    throw error
+  }
+}
+
 const getUsers = async (req, res, next) => {
   try {
     const users = await User.find().populate('juegos')
