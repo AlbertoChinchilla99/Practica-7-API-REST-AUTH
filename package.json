@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "moviesSeed": "node ./src/utils/seeds/movie.js"
+    "seedJuegos": "node ./src/utils/seeds/seedJuegos.js",
+    "seedPlataformas": "node ./src/utils/seeds/seedPlataformas.js"
   },
   "author": "",
   "license": "ISC",
